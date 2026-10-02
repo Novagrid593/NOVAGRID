@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NOVA GRID — Next-Gen Minecraft Hosting Plans</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              purple: '#8b5cf6',
+              blue: '#3b82f6',
+              dark: '#05030b',
+              card: 'rgba(18, 14, 36, 0.8)',
+              border: 'rgba(139, 92, 246, 0.3)'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #05030b;
+      color: #f3f4f6;
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Cyberpunk Animated Background Grid & Glow */
+    .cyber-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: -1;
+      background: 
+        radial-gradient(circle at 50% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 10% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, rgba(236, 72, 153, 0.08) 0%, transparent 40%);
+    }
+
+    .grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+      background-size: 30px 30px;
+      mask-image: radial-gradient(circle at 50% 30%, black 40%, transparent 80%);
+      animation: gridMove 20s linear infinite;
+    }
+
+    @keyframes gridMove {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 30px; }
+    }
+
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.3));
+      background-size: 100% 4px;
+      opacity: 0.4;
+    }
+
+    /* Cyber Glass Styling */
+    .cyber-glass {
+      background: rgba(18, 14, 36, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      box-shadow: 0 8px 32px 0 rgba(5, 3, 11, 0.37);
+    }
+    .cyber-glass:hover {
+      border-color: rgba(139, 92, 246, 0.5);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff 20%, #a78bfa 60%, #60a5fa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .btn-cyber {
+      background: linear-gradient(135deg, #7c3aed 0%, #2563eb 100%);
+      transition: all 0.2s ease;
+    }
+    .btn-cyber:hover {
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.6);
+      transform: translateY(-1px);
+    }
+    .btn-cyber:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-purple-600 selection:text-white relative pb-16 md:pb-0">
+
+  <!-- Cyberpunk Background Animation Layer -->
+  <div class="cyber-bg">
+    <div class="grid-lines"></div>
+    <div class="scanlines"></div>
+  </div>
+
+  <!-- UNIVERSAL NAVIGATION BAR -->
+  <nav class="sticky top-0 z-40 border-b border-purple-900/40 bg-black/80 backdrop-blur-md px-4 md:px-8 py-3.5">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#" onclick="switchView('home')" class="flex items-center gap-3">
+        <div id="navBrandLogo" class="w-9 h-9 rounded-xl bg-purple-900/50 border border-purple-500/50 flex items-center justify-center text-purple-400 font-black text-base shadow-lg overflow-hidden">
+          NG
+        </div>
+        <span class="text-xl font-black tracking-wider gradient-text">NOVA GRID</span>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <div class="hidden md:flex items-center gap-6 text-sm font-medium text-gray-300">
+        <button onclick="switchView('home')" class="hover:text-purple-400 transition">Home</button>
+        <button onclick="switchView('plans')" class="hover:text-purple-400 transition">Plans</button>
+        <button onclick="switchView('dashboard')" class="hover:text-purple-400 transition">Client Panel</button>
+        <button onclick="switchView('feedback')" class="hover:text-purple-400 transition">Feedback</button>
+      </div>
+
+      <!-- Access Code Area -->
+      <div id="authNavArea" class="flex items-center gap-2">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow w-full max-w-7xl mx-auto px-4 md:px-8 py-6 relative z-10">
+
+    <!-- VIEW 1: HOME PAGE -->
+    <section id="view-home" class="space-y-12">
+      <div class="text-center max-w-3xl mx-auto py-8 md:py-16 space-y-6">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-950/80 border border-purple-500/30 text-purple-300 text-xs font-semibold tracking-wider uppercase">
+          <i class="fa-solid fa-microchip text-blue-400"></i> AMD Ryzen 9 9950X3D
+        </div>
+        <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight gradient-text leading-tight">
+          Next-Gen Minecraft Server Hosting
+        </h1>
+        <p class="text-gray-400 text-xs md:text-base leading-relaxed px-2">
+          No signups required. Instant setup with dynamic UPI payment verification and unique access tokens.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-xs md:text-sm text-gray-300 pt-2">
+          <span class="flex items-center gap-2"><i class="fa-solid fa-bolt text-purple-400"></i> Zero Signup System</span>
+          <span class="flex items-center gap-2"><i class="fa-solid fa-shield-halved text-blue-400"></i> Enterprise DDoS Shield</span>
+          <span class="flex items-center gap-2"><i class="fa-solid fa-cube text-indigo-400"></i> Pterodactyl Panel</span>
+        </div>
+        <div class="pt-4 max-w-xs mx-auto">
+          <button onclick="switchView('plans')" class="w-full btn-cyber text-base py-3.5 rounded-xl font-bold text-white shadow-xl flex items-center justify-center gap-2">
+            EXPLORE OUR PLANS <i class="fa-solid fa-arrow-right text-xs"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Features Grid (1 Col Mobile / 3 Col Desktop) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="cyber-glass p-6 rounded-2xl space-y-3 flex flex-col items-start">
+          <div class="w-12 h-12 rounded-xl bg-purple-900/40 border border-purple-500/30 flex items-center justify-center text-purple-400 text-xl mb-1">
+            <i class="fa-solid fa-key"></i>
+          </div>
+          <h3 class="text-base font-bold text-white">Unique Code Access</h3>
+          <p class="text-xs md:text-sm text-gray-400">Skip passwords completely. Control and manage server instances using your generated access token.</p>
+        </div>
+        <div class="cyber-glass p-6 rounded-2xl space-y-3 flex flex-col items-start">
+          <div class="w-12 h-12 rounded-xl bg-blue-900/40 border border-blue-500/30 flex items-center justify-center text-blue-400 text-xl mb-1">
+            <i class="fa-solid fa-qrcode"></i>
+          </div>
+          <h3 class="text-base font-bold text-white">Instant UPI Dynamic QR</h3>
+          <p class="text-xs md:text-sm text-gray-400">Scan & pay instantly via standard UPI apps. Submit UTR details for automated system verification.</p>
+        </div>
+        <div class="cyber-glass p-6 rounded-2xl space-y-3 flex flex-col items-start">
+          <div class="w-12 h-12 rounded-xl bg-indigo-900/40 border border-indigo-500/30 flex items-center justify-center text-indigo-400 text-xl mb-1">
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <h3 class="text-base font-bold text-white">Pterodactyl Control</h3>
+          <p class="text-xs md:text-sm text-gray-400">Full console management, file access, database configuration, and scheduled backup tools.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 2: PLANS & PRICING -->
+    <section id="view-plans" class="hidden space-y-8">
+      <div class="text-center space-y-2">
+        <h2 class="text-2xl md:text-4xl font-extrabold gradient-text">All 7 Hosting Plans</h2>
+        <p class="text-gray-400 text-xs md:text-sm">Select a plan to start instant deployment.</p>
+      </div>
+
+      <!-- Responsive Grid: 1 Col Mobile / 2 Col Tablet / 3-4 Col Desktop -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+        <!-- Plan 1: Dirt (2GB) -->
+        <div class="cyber-glass rounded-2xl p-6 relative border-stone-500/30 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-stone-300 text-[10px] font-black uppercase tracking-wider bg-stone-900/80 px-2.5 py-1 rounded border border-stone-500/30">Dirt Plan</span>
+              <span class="text-[11px] text-gray-400">1 Backup</span>
+            </div>
+            <div>
+              <div class="text-3xl font-extrabold text-white">₹199 <span class="text-xs text-gray-400 font-normal">/mo</span></div>
+            </div>
+            <ul class="space-y-2.5 text-xs text-gray-300 divide-y divide-purple-900/20">
+              <li class="pt-2 flex items-center justify-between"><span>RAM</span> <strong class="text-white">2GB DDR5</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>CPU</span> <strong class="text-white">100% Ryzen 9</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">15GB</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>Player Slots</span> <strong class="text-white">Unlimited</strong></li>
+            </ul>
+          </div>
+          <button onclick="startPurchase('Dirt', '199')" class="w-full py-3 rounded-xl font-bold bg-stone-700 hover:bg-stone-600 text-white transition text-xs">
+            Order Dirt Plan
+          </button>
+        </div>
+
+        <!-- Plan 2: Starter (4GB) -->
+        <div class="cyber-glass rounded-2xl p-6 relative border-emerald-500/30 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-emerald-400 text-[10px] font-black uppercase tracking-wider bg-emerald-950/80 px-2.5 py-1 rounded border border-emerald-500/30">Starter Plan</span>
+              <span class="text-[11px] text-gray-400">2 Backups</span>
+            </div>
+            <div>
+              <div class="text-3xl font-extrabold text-white">₹349 <span class="text-xs text-gray-400 font-normal">/mo</span></div>
+            </div>
+            <ul class="space-y-2.5 text-xs text-gray-300 divide-y divide-purple-900/20">
+              <li class="pt-2 flex items-center justify-between"><span>RAM</span> <strong class="text-white">4GB DDR5</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>CPU</span> <strong class="text-white">150% Ryzen 9</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">25GB</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>Player Slots</span> <strong class="text-white">Unlimited</strong></li>
+            </ul>
+          </div>
+          <button onclick="startPurchase('Starter', '349')" class="w-full py-3 rounded-xl font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition text-xs">
+            Order Starter Plan
+          </button>
+        </div>
+
+        <!-- Plan 3: Iron (6GB) -->
+        <div class="cyber-glass rounded-2xl p-6 relative border-slate-400/30 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-300 text-[10px] font-black uppercase tracking-wider bg-slate-900/80 px-2.5 py-1 rounded border border-slate-500/30">Iron Plan</span>
+              <span class="text-[11px] text-gray-400">3 Backups</span>
+            </div>
+            <div>
+              <div class="text-3xl font-extrabold text-white">₹549 <span class="text-xs text-gray-400 font-normal">/mo</span></div>
+            </div>
+            <ul class="space-y-2.5 text-xs text-gray-300 divide-y divide-purple-900/20">
+              <li class="pt-2 flex items-center justify-between"><span>RAM</span> <strong class="text-white">6GB DDR5</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>CPU</span> <strong class="text-white">200% Ryzen 9</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">45GB</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>Player Slots</span> <strong class="text-white">Unlimited</strong></li>
+            </ul>
+          </div>
+          <button onclick="startPurchase('Iron', '549')" class="w-full py-3 rounded-xl font-bold bg-slate-700 hover:bg-slate-600 text-white transition text-xs">
+            Order Iron Plan
+          </button>
+        </div>
+
+        <!-- Plan 4: Pro (8GB) - Featured -->
+        <div class="cyber-glass rounded-2xl p-6 relative border-purple-500 shadow-2xl bg-purple-950/30 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow">Most Popular</div>
+            <div class="flex justify-between items-center pt-1">
+              <span class="text-purple-400 text-[10px] font-black uppercase tracking-wider bg-purple-950/80 px-2.5 py-1 rounded border border-purple-500/30">Pro Plan</span>
+              <span class="text-[11px] text-gray-400">4 Backups</span>
+            </div>
+            <div>
+              <div class="text-3xl font-extrabold text-white">₹799 <span class="text-xs text-gray-400 font-normal">/mo</span></div>
+            </div>
+            <ul class="space-y-2.5 text-xs text-gray-300 divide-y divide-purple-900/20">
+              <li class="pt-2 flex items-center justify-between"><span>RAM</span> <strong class="text-white">8GB DDR5</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>CPU</span> <strong class="text-white">300% Ryzen 9</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">60GB</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>Player Slots</span> <strong class="text-white">Unlimited</strong></li>
+            </ul>
+          </div>
+          <button onclick="startPurchase('Pro', '799')" class="w-full py-3 rounded-xl font-bold btn-cyber text-white transition text-xs">
+            Order Pro Plan
+          </button>
+        </div>
+
+        <!-- Plan 5: Diamond (12GB) -->
+        <div class="cyber-glass rounded-2xl p-6 relative border-cyan-400/30 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-cyan-300 text-[10px] font-black uppercase tracking-wider bg-cyan-950/80 px-2.5 py-1 rounded border border-cyan-500/30">Diamond Plan</span>
+              <span class="text-[11px] text-gray-400">5 Backups</span>
+            </div>
+            <div>
+              <div class="text-3xl font-extrabold text-white">₹1,149 <span class="text-xs text-gray-400 font-normal">/mo</span></div>
+            </div>
+            <ul class="space-y-2.5 text-xs text-gray-300 divide-y divide-purple-900/20">
+              <li class="pt-2 flex items-center justify-between"><span>RAM</span> <strong class="text-white">12GB DDR5</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>CPU</span> <strong class="text-white">400% Ryzen 9</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">90GB</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>Player Slots</span> <strong class="text-white">Unlimited</strong></li>
+            </ul>
+          </div>
+          <button onclick="startPurchase('Diamond', '1149')" class="w-full py-3 rounded-xl font-bold bg-cyan-700 hover:bg-cyan-600 text-white transition text-xs">
+            Order Diamond Plan
+          </button>
+        </div>
+
+        <!-- Plan 6: Ultimate (16GB) -->
+        <div class="cyber-glass rounded-2xl p-6 relative border-blue-500/30 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <span class="text-blue-400 text-[10px] font-black uppercase tracking-wider bg-blue-950/80 px-2.5 py-1 rounded border border-blue-500/30">Ultimate Plan</span>
+              <span class="text-[11px] text-gray-400">7 Backups</span>
+            </div>
+            <div>
+              <div class="text-3xl font-extrabold text-white">₹1,499 <span class="text-xs text-gray-400 font-normal">/mo</span></div>
+            </div>
+            <ul class="space-y-2.5 text-xs text-gray-300 divide-y divide-purple-900/20">
+              <li class="pt-2 flex items-center justify-between"><span>RAM</span> <strong class="text-white">16GB DDR5</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>CPU</span> <strong class="text-white">500% Ryzen 9</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">120GB</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>Player Slots</span> <strong class="text-white">Unlimited</strong></li>
+            </ul>
+          </div>
+          <button onclick="startPurchase('Ultimate', '1499')" class="w-full py-3 rounded-xl font-bold bg-blue-600 hover:bg-blue-500 text-white transition text-xs">
+            Order Ultimate Plan
+          </button>
+        </div>
+
+        <!-- Plan 7: Netherite (32GB) -->
+        <div class="cyber-glass rounded-2xl p-6 relative border-amber-500/40 flex flex-col justify-between space-y-5">
+          <div class="space-y-4">
+            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-amber-600 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow">Enterprise Grade</div>
+            <div class="flex justify-between items-center pt-1">
+              <span class="text-amber-400 text-[10px] font-black uppercase tracking-wider bg-amber-950/80 px-2.5 py-1 rounded border border-amber-500/30">Netherite Plan</span>
+              <span class="text-[11px] text-gray-400">10 Backups</span>
+            </div>
+            <div>
+              <div class="text-3xl font-extrabold text-white">₹2,899 <span class="text-xs text-gray-400 font-normal">/mo</span></div>
+            </div>
+            <ul class="space-y-2.5 text-xs text-gray-300 divide-y divide-purple-900/20">
+              <li class="pt-2 flex items-center justify-between"><span>RAM</span> <strong class="text-white">32GB DDR5</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>CPU</span> <strong class="text-white">800% Ryzen 9</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>NVMe Storage</span> <strong class="text-white">250GB</strong></li>
+              <li class="pt-2 flex items-center justify-between"><span>Player Slots</span> <strong class="text-white">Unlimited</strong></li>
+            </ul>
+          </div>
+          <button onclick="startPurchase('Netherite', '2899')" class="w-full py-3 rounded-xl font-bold bg-amber-600 hover:bg-amber-500 text-white transition text-xs">
+            Order Netherite Plan
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 3: UPI QR CODE PAYMENT PAGE -->
+    <section id="view-payment" class="hidden space-y-6 max-w-lg mx-auto">
+      <div class="cyber-glass p-6 md:p-8 rounded-3xl text-center space-y-6 border-purple-500/40">
+        <div class="space-y-1">
+          <span class="text-[10px] uppercase font-bold text-purple-400 tracking-widest">Complete Payment</span>
+          <h2 id="payPlanName" class="text-2xl font-extrabold text-white">Starter Plan</h2>
+          <div id="payPlanPrice" class="text-4xl font-black text-purple-300">₹349</div>
+        </div>
+
+        <!-- Dynamic UPI QR Code Container -->
+        <div class="p-4 bg-white rounded-2xl inline-block shadow-2xl border-2 border-purple-500/40">
+          <img id="upiQrImage" src="" alt="UPI Payment QR Code" class="w-48 h-48 mx-auto object-contain">
+        </div>
+
+        <div class="text-xs text-gray-400 space-y-2">
+          <p class="text-xs"><i class="fa-solid fa-qrcode text-purple-400"></i> Scan with GPay, PhonePe, or Paytm</p>
+          <div class="flex items-center justify-center gap-2 font-mono text-xs text-purple-300 bg-purple-950/60 py-2 px-3 rounded-lg border border-purple-500/30">
+            <span id="displayUpiId">novagrid@upi</span>
+            <button onclick="copyUpiId()" class="text-purple-400 hover:text-white ml-2"><i class="fa-regular fa-copy"></i></button>
+          </div>
+        </div>
+
+        <!-- Order Form -->
+        <form onsubmit="confirmPaymentAndSubmit(event)" class="text-left space-y-4 pt-2">
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Enter 12-Digit UTR / Transaction ID</label>
+            <input type="text" id="payUtrInput" required pattern="[0-9A-Za-z]{8,16}" placeholder="e.g. 409218291048" class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-4 py-3 text-xs md:text-sm text-white focus:outline-none focus:border-purple-500">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Your Access Code (Save this!)</label>
+            <input type="text" id="payAccessCodeInput" readonly class="w-full bg-purple-950/40 border border-purple-500/40 rounded-xl px-4 py-3 text-xs md:text-sm font-mono text-purple-300 font-bold focus:outline-none">
+          </div>
+          <button type="submit" class="w-full btn-cyber py-3.5 rounded-xl font-bold text-white text-sm shadow-xl flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paper-plane"></i> Submit Payment Proof
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- VIEW 4: PENDING VERIFICATION PAGE -->
+    <section id="view-pending" class="hidden py-8 text-center space-y-6 max-w-lg mx-auto">
+      <div class="cyber-glass p-6 md:p-8 rounded-3xl space-y-6 relative overflow-hidden border-yellow-500/30">
+        <div class="relative w-16 h-16 mx-auto flex items-center justify-center">
+          <div class="absolute inset-0 rounded-full border-2 border-yellow-500/30 animate-ping"></div>
+          <div class="w-14 h-14 rounded-full bg-yellow-500/20 border border-yellow-400/50 flex items-center justify-center text-yellow-300 text-2xl">
+            <i class="fa-solid fa-clock"></i>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <h2 class="text-2xl font-bold text-white">Verification Pending</h2>
+          <p class="text-xs md:text-sm text-gray-300 px-2">Your UTR has been logged. Admin team will verify payment shortly.</p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-purple-950/40 border border-purple-500/20 text-xs md:text-sm text-gray-400 text-left space-y-2">
+          <div class="flex justify-between"><span class="text-gray-500">Access Code:</span> <strong id="pendingAccessCode" class="text-purple-300 font-mono">--</strong></div>
+          <div class="flex justify-between"><span class="text-gray-500">Selected Plan:</span> <strong id="pendingPlan" class="text-purple-300">--</strong></div>
+          <div class="flex justify-between"><span class="text-gray-500">Status:</span> <span class="text-yellow-400 font-semibold">Awaiting Verification</span></div>
+        </div>
+
+        <button onclick="switchView('dashboard')" class="w-full py-3 rounded-xl font-semibold border border-purple-500/30 text-purple-300 hover:bg-purple-900/30 text-xs md:text-sm">
+          Check Client Dashboard
+        </button>
+      </div>
+    </section>
+
+    <!-- VIEW 5: CLIENT DASHBOARD -->
+    <section id="view-dashboard" class="hidden space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-purple-900/40 pb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Client Panel</h2>
+          <p class="text-xs md:text-sm text-gray-400">Instances for token: <span id="dashActiveCode" class="font-mono text-purple-400 font-bold">--</span></p>
+        </div>
+        <button onclick="switchView('plans')" class="btn-cyber px-5 py-2.5 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-2">
+          <i class="fa-solid fa-plus"></i> Deploy New Server Plan
+        </button>
+      </div>
+
+      <!-- Active Servers Container -->
+      <div id="userServersContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Rendered via JavaScript -->
+      </div>
+    </section>
+
+    <!-- VIEW 6: FEEDBACK PAGE -->
+    <section id="view-feedback" class="hidden space-y-8 max-w-2xl mx-auto">
+      <div class="cyber-glass p-6 md:p-8 rounded-3xl space-y-6">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Community Feedback</h2>
+          <p class="text-xs md:text-sm text-gray-400">Rate our performance or read community reviews.</p>
+        </div>
+
+        <!-- Rating Form -->
+        <form onsubmit="submitFeedback(event)" class="space-y-4 border-b border-purple-900/40 pb-6">
+          <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1.5">Select Rating</label>
+            <div id="starSelector" class="flex gap-2 text-2xl text-gray-600 cursor-pointer">
+              <i onclick="setStarRating(1)" class="fa-solid fa-star"></i>
+              <i onclick="setStarRating(2)" class="fa-solid fa-star"></i>
+              <i onclick="setStarRating(3)" class="fa-solid fa-star"></i>
+              <i onclick="setStarRating(4)" class="fa-solid fa-star"></i>
+              <i onclick="setStarRating(5)" class="fa-solid fa-star"></i>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-400 mb-1">Your Review / Feedback</label>
+            <textarea id="feedbackComment" required rows="3" class="w-full bg-black/50 border border-purple-500/30 rounded-xl p-3 text-xs md:text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Share your experience with Nova Grid server speeds..."></textarea>
+          </div>
+          <button type="submit" class="w-full btn-cyber py-3 rounded-xl font-bold text-white text-xs md:text-sm">
+            Post Feedback
+          </button>
+        </form>
+
+        <!-- Feedback List Wall -->
+        <div class="space-y-4">
+          <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider">Recent Reviews</h3>
+          <div id="feedbackList" class="space-y-4">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 7: ADMIN PANEL -->
+    <section id="view-admin" class="hidden space-y-6">
+      <div class="flex justify-between items-center border-b border-purple-900/40 pb-4">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Admin Center</h2>
+          <p class="text-xs md:text-sm text-gray-400">Configure global settings and manual order approvals.</p>
+        </div>
+        <button onclick="switchView('home')" class="px-4 py-2 bg-purple-900/30 border border-purple-500/30 rounded-lg text-xs text-purple-300 hover:bg-purple-900/50">Exit Admin</button>
+      </div>
+
+      <!-- Config Grid (Desktop 2-col) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Admin Global Config -->
+        <div class="cyber-glass rounded-2xl p-6 space-y-4 border-blue-500/30">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-blue-400"></i> Global Settings
+          </h3>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 mb-1">Default Panel Link</label>
+              <div class="flex gap-2">
+                <input type="url" id="adminPanelLinkInput" placeholder="https://panel.yourdomain.com" class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+                <button onclick="saveGlobalPanelLink()" class="btn-cyber px-4 py-2 rounded-xl text-xs font-bold text-white">Save</button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 mb-1">Server Logo Image URL</label>
+              <div class="flex gap-2">
+                <input type="url" id="adminLogoUrlInput" placeholder="https://imgur.com/logo.png" class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+                <button onclick="saveGlobalLogo()" class="btn-cyber px-4 py-2 rounded-xl text-xs font-bold text-white">Update</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin Payment Config -->
+        <div class="cyber-glass rounded-2xl p-6 space-y-4 border-emerald-500/30">
+          <h3 class="text-sm font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-qrcode text-emerald-400"></i> UPI Gateway Settings
+          </h3>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 mb-1">Merchant UPI ID</label>
+              <input type="text" id="adminUpiIdInput" placeholder="yourname@upi" class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-300 mb-1">Custom Scanner QR Image URL (Optional)</label>
+              <input type="url" id="adminQrUrlInput" placeholder="https://imgur.com/my-qr-code.png" class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-3 py-2 text-xs text-white focus:outline-none">
+            </div>
+            <button onclick="saveUpiSettings()" class="w-full btn-cyber py-2.5 rounded-xl text-xs font-bold text-white">Save UPI Settings</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pending Orders Queue -->
+      <div class="cyber-glass rounded-2xl p-6 space-y-4">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-hourglass-half text-yellow-400"></i> Pending Queue
+        </h3>
+        <div id="adminQueue" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Admin Active Servers Table -->
+      <div class="cyber-glass rounded-2xl p-6 space-y-4">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-server text-purple-400"></i> Active Server Instances
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs md:text-sm text-gray-300">
+            <thead class="bg-purple-950/40 text-purple-300 uppercase tracking-wider border-b border-purple-900/30">
+              <tr>
+                <th class="p-3">ID</th>
+                <th class="p-3">Access Code</th>
+                <th class="p-3">Plan</th>
+                <th class="p-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="adminServersTableBody" class="divide-y divide-purple-900/20">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- System Stats -->
+      <div class="grid grid-cols-3 gap-4">
+        <div class="cyber-glass p-4 rounded-xl text-center">
+          <span class="text-xs text-gray-400 uppercase font-semibold block">Active Servers</span>
+          <div id="adminTotalServers" class="text-2xl font-black text-purple-300">0</div>
+        </div>
+        <div class="cyber-glass p-4 rounded-xl text-center">
+          <span class="text-xs text-gray-400 uppercase font-semibold block">Pending</span>
+          <div id="adminPendingCount" class="text-2xl font-black text-yellow-400">0</div>
+        </div>
+        <div class="cyber-glass p-4 rounded-xl text-center">
+          <span class="text-xs text-gray-400 uppercase font-semibold block">Reviews</span>
+          <div id="adminFeedbackCount" class="text-2xl font-black text-emerald-400">0</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MOBILE BOTTOM NAVIGATION TAB BAR (Mobile Only) -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-black/90 backdrop-blur-lg border-t border-purple-900/40 px-3 py-2 flex justify-around items-center text-gray-400">
+    <button onclick="switchView('home')" id="tab-home" class="flex flex-col items-center gap-1 text-[10px] active:text-purple-400">
+      <i class="fa-solid fa-house text-base"></i>
+      <span>Home</span>
+    </button>
+    <button onclick="switchView('plans')" id="tab-plans" class="flex flex-col items-center gap-1 text-[10px] active:text-purple-400">
+      <i class="fa-solid fa-layer-group text-base"></i>
+      <span>Plans</span>
+    </button>
+    <button onclick="switchView('dashboard')" id="tab-dashboard" class="flex flex-col items-center gap-1 text-[10px] active:text-purple-400">
+      <i class="fa-solid fa-server text-base"></i>
+      <span>Client Panel</span>
+    </button>
+    <button onclick="switchView('feedback')" id="tab-feedback" class="flex flex-col items-center gap-1 text-[10px] active:text-purple-400">
+      <i class="fa-solid fa-comments text-base"></i>
+      <span>Feedback</span>
+    </button>
+  </div>
+
+  <!-- ACCESS CODE MODAL -->
+  <div id="accessModal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="cyber-glass w-full max-w-sm p-6 rounded-3xl space-y-5 relative border-purple-500/40">
+      <button onclick="closeAccessCodeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div class="text-center space-y-1">
+        <h3 class="text-lg font-bold text-white">Enter Access Code</h3>
+        <p class="text-xs text-gray-400">Enter code to view specific client dashboard</p>
+      </div>
+
+      <form onsubmit="submitAccessCode(event)" class="space-y-4">
+        <div>
+          <input type="text" id="modalAccessInput" required placeholder="e.g. NG-8921-X3A" class="w-full bg-black/50 border border-purple-500/30 rounded-xl px-3 py-3 text-center text-base font-mono text-purple-300 uppercase tracking-widest focus:outline-none focus:border-purple-500">
+        </div>
+        <button type="submit" class="w-full btn-cyber py-3 rounded-xl font-bold text-white text-xs">
+          Load Dashboard
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-purple-900/30 bg-black/40 py-8 px-4 text-center text-xs text-gray-500 space-y-2 relative z-10 mb-12 md:mb-0">
+    <div class="text-sm font-bold text-gray-300">NOVA GRID Hosting</div>
+    <p>© 2026 NOVA GRID Hosting Plans. Powered by AMD Ryzen 9 9950X3D.</p>
+    <div>
+      <button onclick="promptAdminLogin()" class="text-[10px] text-gray-600 hover:text-purple-400 tracking-widest uppercase transition">
+        <i class="fa-solid fa-lock text-[8px] mr-1"></i> Admin Portal
+      </button>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT APP LOGIC -->
+  <script>
+    let currentAccessCode = localStorage.getItem('ng_access_code') || '';
+    let globalPanelLink = localStorage.getItem('ng_panel_link') || 'https://panel.novagrid.host';
+    let globalServerLogo = localStorage.getItem('ng_server_logo') || '';
+    let globalUpiId = localStorage.getItem('ng_upi_id') || 'novagrid@upi';
+    let globalQrUrl = localStorage.getItem('ng_qr_url') || '';
+    
+    let selectedPlan = { name: 'Starter', price: '349' };
+    let selectedRating = 5;
+
+    let pendingOrders = JSON.parse(localStorage.getItem('ng_pending_orders')) || [
+      { id: 'ORD-9081', accessCode: 'NG-9982-A', plan: 'Pro Plan', price: '799', utr: '409128910481', logoUrl: '', date: '10 mins ago' }
+    ];
+
+    let activeServers = JSON.parse(localStorage.getItem('ng_active_servers')) || [
+      { id: 'SRV-101', accessCode: 'NG-DEMO-99', plan: 'Pro Plan (8GB)', status: 'Online', logo: '', pteroLink: 'https://panel.novagrid.host' }
+    ];
+
+    let feedbackReviews = JSON.parse(localStorage.getItem('ng_feedback_reviews')) || [
+      { id: 1, name: 'GamerX_99', rating: 5, comment: '0 TPS lag even with 40+ plugins! Ryzen 9 9950X3D is insanely fast.', date: 'Yesterday', upvotes: 12 },
+      { id: 2, name: 'CraftMaster', rating: 5, comment: 'Instant setup via UPI QR code. Pterodactyl access was ready fast.', date: '3 days ago', upvotes: 8 }
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (!currentAccessCode) {
+        currentAccessCode = generateUniqueCode();
+        localStorage.setItem('ng_access_code', currentAccessCode);
+      }
+      updateNavAuthUI();
+      applyGlobalLogo();
+      renderFeedbackList();
+      setStarRating(5);
+
+      window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
+          e.preventDefault();
+          promptAdminLogin();
+        }
+      });
+    });
+
+    function generateUniqueCode() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let part1 = '';
+      let part2 = '';
+      for (let i = 0; i < 4; i++) {
+        part1 += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      for (let i = 0; i < 3; i++) {
+        part2 += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return 'NG-' + part1 + '-' + part2;
+    }
+
+    function saveState() {
+      localStorage.setItem('ng_pending_orders', JSON.stringify(pendingOrders));
+      localStorage.setItem('ng_active_servers', JSON.stringify(activeServers));
+      localStorage.setItem('ng_feedback_reviews', JSON.stringify(feedbackReviews));
+      localStorage.setItem('ng_panel_link', globalPanelLink);
+      localStorage.setItem('ng_server_logo', globalServerLogo);
+      localStorage.setItem('ng_upi_id', globalUpiId);
+      localStorage.setItem('ng_qr_url', globalQrUrl);
+    }
+
+    function switchView(viewId) {
+      const views = ['home', 'plans', 'payment', 'pending', 'dashboard', 'feedback', 'admin'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) el.classList.add('hidden');
+      });
+
+      const activeEl = document.getElementById(`view-${viewId}`);
+      if (activeEl) activeEl.classList.remove('hidden');
+
+      if (viewId === 'dashboard') renderClientDashboard();
+      if (viewId === 'admin') {
+        renderAdminQueue();
+        renderAdminServersTable();
+        document.getElementById('adminPanelLinkInput').value = globalPanelLink;
+        document.getElementById('adminLogoUrlInput').value = globalServerLogo;
+        document.getElementById('adminUpiIdInput').value = globalUpiId;
+        document.getElementById('adminQrUrlInput').value = globalQrUrl;
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateNavAuthUI() {
+      const container = document.getElementById('authNavArea');
+      container.innerHTML = `
+        <button onclick="openAccessCodeModal()" class="flex items-center gap-1.5 bg-purple-950/80 border border-purple-500/40 px-3 py-1.5 rounded-xl hover:bg-purple-900/50">
+          <i class="fa-solid fa-key text-purple-400 text-xs"></i>
+          <span class="text-xs md:text-sm font-mono font-bold text-purple-200">${currentAccessCode}</span>
+        </button>
+      `;
+    }
+
+    function applyGlobalLogo() {
+      const brandLogoContainer = document.getElementById('navBrandLogo');
+      if (globalServerLogo) {
+        brandLogoContainer.innerHTML = `<img src="${globalServerLogo}" alt="Logo" class="w-full h-full object-cover">`;
+      } else {
+        brandLogoContainer.innerHTML = `NG`;
+      }
+    }
+
+    function saveGlobalPanelLink() {
+      const val = document.getElementById('adminPanelLinkInput').value.trim();
+      if (val) {
+        globalPanelLink = val;
+        saveState();
+        alert('Default Global Panel Link updated!');
+      }
+    }
+
+    function saveGlobalLogo() {
+      const val = document.getElementById('adminLogoUrlInput').value.trim();
+      globalServerLogo = val;
+      saveState();
+      applyGlobalLogo();
+      alert('Global Server Logo updated!');
+    }
+
+    function saveUpiSettings() {
+      const upiVal = document.getElementById('adminUpiIdInput').value.trim();
+      const qrVal = document.getElementById('adminQrUrlInput').value.trim();
+      if (upiVal) {
+        globalUpiId = upiVal;
+      }
+      globalQrUrl = qrVal;
+      saveState();
+      alert('UPI settings updated!');
+    }
+
+    function openAccessCodeModal() {
+      document.getElementById('accessModal').classList.remove('hidden');
+      document.getElementById('modalAccessInput').value = currentAccessCode;
+    }
+
+    function closeAccessCodeModal() {
+      document.getElementById('accessModal').classList.add('hidden');
+    }
+
+    function submitAccessCode(e) {
+      e.preventDefault();
+      const input = document.getElementById('modalAccessInput').value.trim();
+      if (input) {
+        currentAccessCode = input.toUpperCase();
+        localStorage.setItem('ng_access_code', currentAccessCode);
+        updateNavAuthUI();
+        closeAccessCodeModal();
+        switchView('dashboard');
+      }
+    }
+
+    function startPurchase(planName, price) {
+      selectedPlan = { name: planName, price: price };
+      document.getElementById('payPlanName').innerText = `${planName} Plan`;
+      document.getElementById('payPlanPrice').innerText = `₹${price}`;
+      document.getElementById('payAccessCodeInput').value = currentAccessCode;
+      document.getElementById('displayUpiId').innerText = globalUpiId;
+
+      let qrImageUrl = '';
+      if (globalQrUrl) {
+        qrImageUrl = globalQrUrl;
+      } else {
+        const upiUri = `upi://pay?pa=${encodeURIComponent(globalUpiId)}&pn=NOVA%20GRID%20HOSTING&am=${price}&cu=INR`;
+        qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUri)}`;
+      }
+      document.getElementById('upiQrImage').src = qrImageUrl;
+
+      switchView('payment');
+    }
+
+    function copyUpiId() {
+      copyText(globalUpiId);
+      alert('UPI ID copied to clipboard!');
+    }
+
+    function confirmPaymentAndSubmit(e) {
+      e.preventDefault();
+      const utr = document.getElementById('payUtrInput').value.trim();
+      
+      const newOrder = {
+        id: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
+        accessCode: currentAccessCode,
+        plan: selectedPlan.name + ' Plan',
+        price: selectedPlan.price,
+        utr: utr,
+        logoUrl: globalServerLogo,
+        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      pendingOrders.push(newOrder);
+      saveState();
+
+      document.getElementById('pendingPlan').innerText = `${selectedPlan.name} Plan (₹${selectedPlan.price})`;
+      document.getElementById('pendingAccessCode').innerText = currentAccessCode;
+      switchView('pending');
+    }
+
+    function renderClientDashboard() {
+      document.getElementById('dashActiveCode').innerText = currentAccessCode;
+      const container = document.getElementById('userServersContainer');
+      const userServers = activeServers.filter(s => s.accessCode === currentAccessCode);
+
+      if (userServers.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full cyber-glass p-8 rounded-2xl text-center space-y-4">
+            <i class="fa-solid fa-server text-4xl text-purple-500/40"></i>
+            <h3 class="text-lg font-bold text-white">No Active Plans Found</h3>
+            <p class="text-xs md:text-sm text-gray-400">No deployed servers for access code <span class="font-mono text-purple-300">${currentAccessCode}</span>.</p>
+            <button onclick="switchView('plans')" class="btn-cyber px-5 py-2.5 rounded-xl font-bold text-xs text-white">EXPLORE PLANS</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = userServers.map(srv => `
+        <div class="cyber-glass rounded-2xl p-6 space-y-4 border-purple-500/30">
+          <div class="flex justify-between items-start">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-purple-950 border border-purple-500/40 overflow-hidden flex items-center justify-center text-purple-300 font-bold text-sm">
+                ${srv.logo ? `<img src="${srv.logo}" class="w-full h-full object-cover">` : '<i class="fa-solid fa-cube"></i>'}
+              </div>
+              <div>
+                <span class="text-[10px] font-mono text-purple-400 font-bold">${srv.id}</span>
+                <h3 class="text-lg font-bold text-white">${srv.plan}</h3>
+              </div>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-500/30">
+              ${srv.status}
+            </span>
+          </div>
+
+          <div class="pt-2">
+            <a href="${srv.pteroLink}" target="_blank" class="w-full py-3 rounded-xl font-bold btn-cyber text-white flex items-center justify-center gap-2 text-xs shadow-lg">
+              <span>Open Pterodactyl Panel</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setStarRating(rating) {
+      selectedRating = rating;
+      const stars = document.getElementById('starSelector').children;
+      for (let i = 0; i < stars.length; i++) {
+        if (i < rating) {
+          stars[i].classList.remove('text-gray-600');
+          stars[i].classList.add('text-yellow-400');
+        } else {
+          stars[i].classList.remove('text-yellow-400');
+          stars[i].classList.add('text-gray-600');
+        }
+      }
+    }
+
+    function submitFeedback(e) {
+      e.preventDefault();
+      const comment = document.getElementById('feedbackComment').value.trim();
+      if (!comment) return;
+
+      const newReview = {
+        id: Date.now(),
+        name: `Client (${currentAccessCode.substring(0, 7)})`,
+        rating: selectedRating,
+        comment: comment,
+        date: 'Just now',
+        upvotes: 0
+      };
+
+      feedbackReviews.unshift(newReview);
+      saveState();
+      document.getElementById('feedbackComment').value = '';
+      renderFeedbackList();
+      alert('Feedback submitted!');
+    }
+
+    function renderFeedbackList() {
+      const container = document.getElementById('feedbackList');
+      container.innerHTML = feedbackReviews.map(f => `
+        <div class="cyber-glass p-4 rounded-2xl space-y-2 border-purple-500/20">
+          <div class="flex justify-between items-center">
+            <strong class="text-xs md:text-sm text-white">${f.name}</strong>
+            <span class="text-[10px] text-gray-500">${f.date}</span>
+          </div>
+          <div class="text-yellow-400 text-xs">
+            ${'<i class="fa-solid fa-star"></i>'.repeat(f.rating)}
+          </div>
+          <p class="text-xs md:text-sm text-gray-300">${f.comment}</p>
+          <div class="flex justify-end pt-1">
+            <button onclick="upvoteReview(${f.id})" class="text-xs text-purple-400 hover:text-purple-300 flex items-center gap-1">
+              <i class="fa-solid fa-thumbs-up"></i> ${f.upvotes}
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function upvoteReview(id) {
+      const review = feedbackReviews.find(f => f.id === id);
+      if (review) {
+        review.upvotes++;
+        saveState();
+        renderFeedbackList();
+      }
+    }
+
+    function promptAdminLogin() {
+      const pin = prompt('Enter Admin Access PIN:');
+      if (pin === '1337') {
+        switchView('admin');
+      } else if (pin !== null) {
+        alert('Invalid Admin PIN!');
+      }
+    }
+
+    function renderAdminQueue() {
+      const container = document.getElementById('adminQueue');
+      document.getElementById('adminTotalServers').innerText = activeServers.length;
+      document.getElementById('adminPendingCount').innerText = pendingOrders.length;
+      document.getElementById('adminFeedbackCount').innerText = feedbackReviews.length;
+
+      if (pendingOrders.length === 0) {
+        container.innerHTML = `<div class="col-span-full text-xs text-gray-500 py-4 text-center">No pending orders.</div>`;
+        return;
+      }
+
+      container.innerHTML = pendingOrders.map((ord, idx) => `
+        <div class="p-4 bg-black/50 border border-purple-500/30 rounded-xl space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="text-xs font-mono font-bold text-purple-300">${ord.id}</span>
+            <span class="text-[10px] text-gray-400 font-mono">${ord.accessCode}</span>
+          </div>
+          <div class="text-xs md:text-sm font-bold text-white">${ord.plan} — ₹${ord.price}</div>
+          <div class="text-xs font-mono text-amber-400">UTR: ${ord.utr}</div>
+          <div class="flex gap-2 pt-2">
+            <button onclick="approveOrder(${idx})" class="w-full py-1.5 rounded-lg text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white">
+              Approve
+            </button>
+            <button onclick="rejectOrder(${idx})" class="w-full py-1.5 rounded-lg text-xs font-bold bg-red-900/40 hover:bg-red-900/60 text-red-300">
+              Reject
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAdminServersTable() {
+      const tbody = document.getElementById('adminServersTableBody');
+      document.getElementById('adminTotalServers').innerText = activeServers.length;
+
+      if (activeServers.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500 text-xs">No active servers.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = activeServers.map((srv, idx) => `
+        <tr>
+          <td class="p-3 font-mono text-xs">
+            <div class="text-purple-300 font-bold">${srv.id}</div>
+          </td>
+          <td class="p-3 font-mono text-xs text-gray-400">${srv.accessCode}</td>
+          <td class="p-3 font-semibold text-white text-xs">${srv.plan}</td>
+          <td class="p-3 text-right">
+            <button onclick="deleteServer(${idx})" class="px-2.5 py-1 rounded text-xs font-bold bg-red-900/40 border border-red-500/30 text-red-300 hover:bg-red-900/70">
+              Delete
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function approveOrder(index) {
+      const order = pendingOrders[index];
+      
+      const assignedLink = prompt(`Enter Pterodactyl link for order ${order.id}:`, globalPanelLink);
+      if (assignedLink === null) return;
+
+      const finalLink = assignedLink.trim() !== '' ? assignedLink.trim() : globalPanelLink;
+
+      const newServer = {
+        id: 'SRV-' + Math.floor(100 + Math.random() * 900),
+        accessCode: order.accessCode,
+        plan: order.plan,
+        status: 'Online',
+        logo: order.logoUrl || globalServerLogo,
+        pteroLink: finalLink
+      };
+
+      activeServers.push(newServer);
+      pendingOrders.splice(index, 1);
+      saveState();
+      renderAdminQueue();
+      renderAdminServersTable();
+      alert(`Order approved! Server ${newServer.id} created.`);
+    }
+
+    function rejectOrder(index) {
+      pendingOrders.splice(index, 1);
+      saveState();
+      renderAdminQueue();
+      renderAdminServersTable();
+    }
+
+    function deleteServer(index) {
+      if (confirm('Permanently delete this active server instance?')) {
+        activeServers.splice(index, 1);
+        saveState();
+        renderAdminServersTable();
+        document.getElementById('adminTotalServers').innerText = activeServers.length;
+      }
+    }
+
+    function copyText(text) {
+      navigator.clipboard.writeText(text);
+      alert('Copied to clipboard!');
+    }
+  </script>
+</body>
+</html>
